@@ -1,0 +1,1394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebSwan - Dual Lead Intelligence</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Firebase Configuration -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-app.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/12.4.0/firebase-analytics.js";
+        // TODO: Add SDKs for Firebase products that you want to use
+        // https://firebase.google.com/docs/web/setup#available-libraries
+
+        // Your web app's Firebase configuration
+        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+        const firebaseConfig = {
+            apiKey: "AIzaSyBh2lpvWXWAKCuSl9Q1IIzFrxqAz4BBPpk",
+            authDomain: "webswan-insight.firebaseapp.com",
+            projectId: "webswan-insight",
+            storageBucket: "webswan-insight.firebasestorage.app",
+            messagingSenderId: "685120695991",
+            appId: "1:685120695991:web:2fd280ed7e7ad68405a732",
+            measurementId: "G-1QNQVG7RVJ"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        
+        console.log("🔥 Firebase initialized successfully");
+    </script>
+    
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .google-search { 
+            background: linear-gradient(135deg, #4285f4, #34a853, #fbbc05, #ea4335);
+            background-size: 400% 400%;
+            animation: gradient 3s ease infinite;
+        }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .pulse-loader {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        .lead-card {
+            transition: all 0.3s ease;
+        }
+        .lead-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .service-tab {
+            transition: all 0.3s ease;
+        }
+        .service-tab.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+        .other-industry-input {
+            transition: all 0.3s ease;
+        }
+        .other-industry-input:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .analysis-overview {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .research-modal {
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+        }
+        .industry-popup {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            z-index: 100;
+            animation: slideInRight 0.3s ease-out;
+            max-height: 80vh;
+        }
+        .industry-popup-content {
+            background: white;
+            border-radius: 1rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            border: 1px solid #e5e7eb;
+            padding: 1.5rem;
+            max-width: 20rem;
+            max-height: 70vh;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%) translateY(-50%); opacity: 0; }
+            to { transform: translateX(0) translateY(-50%); opacity: 1; }
+        }
+        .industry-button {
+            transition: all 0.3s ease;
+        }
+        .industry-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 p-4 sm:p-8 min-h-screen">
+
+    <div class="max-w-7xl mx-auto bg-white rounded-3xl shadow-xl overflow-hidden">
+        <!-- Enhanced Header Section -->
+        <header class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 sm:p-8 relative overflow-hidden">
+            <div class="absolute inset-0 bg-black opacity-10"></div>
+            <div class="relative z-10">
+                <h1 class="text-4xl font-extrabold text-white mb-2">🚀 WebSwan Dual Lead Intelligence</h1>
+                <p class="text-blue-200 text-lg">Digital Marketing & Merchant Cash Advance Leads • Real-Time Data</p>
+                <div class="flex items-center mt-4 text-blue-100">
+                    <div class="flex items-center mr-6">
+                        <div class="w-3 h-3 bg-green-400 rounded-full mr-2 pulse-loader"></div>
+                        <span class="text-sm">LIVE DATA STREAM</span>
+                    </div>
+                    <div class="text-sm">
+                        <i class="fas fa-bolt mr-1"></i>
+                        <span id="leadCount">0</span> Active Leads
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Service Type Selection -->
+        <div class="bg-white border-b border-gray-200">
+            <div class="flex space-x-1 p-4">
+                <button id="digitalMarketingTab" class="service-tab active flex-1 bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 px-6 rounded-lg font-semibold text-center">
+                    🎯 Digital Marketing Leads
+                </button>
+                <button id="mcashAdvanceTab" class="service-tab flex-1 bg-gradient-to-r from-green-500 to-green-600 text-white py-3 px-6 rounded-lg font-semibold text-center">
+                    💰 Merchant Cash Advance Leads
+                </button>
+            </div>
+        </div>
+
+        <!-- Main Dashboard Layout -->
+        <div class="p-6 space-y-8">
+            <!-- Real-Time Search Engine -->
+            <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 shadow-md border border-blue-200">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4" id="serviceTitle">🎯 Real-Time Digital Marketing Lead Discovery</h2>
+                <p class="text-gray-600 mb-6" id="serviceDescription">
+                    Discover fresh business leads instantly. Our AI-powered engine scans multiple data sources to find businesses needing your services RIGHT NOW.
+                </p>
+
+                <!-- NEW: Analysis Overview Button -->
+                <div class="mb-6">
+                    <button id="analysis-overview-btn" class="analysis-overview hover:opacity-90 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center w-full">
+                        <i class="fas fa-chart-pie mr-2"></i>
+                        Show Analysis Overview
+                    </button>
+                </div>
+
+                <!-- Service-Specific Quick Action Buttons -->
+                <div id="digitalMarketingButtons" class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
+                    <button onclick="showIndustryInfo('restaurant', '🍽️ Restaurants')" class="industry-button bg-red-500 hover:bg-red-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🍽️ Restaurants
+                    </button>
+                    <button onclick="showIndustryInfo('dentist', '🦷 Dentists')" class="industry-button bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🦷 Dentists
+                    </button>
+                    <button onclick="showIndustryInfo('chiropractors', '🩺 Chiropractors')" class="industry-button bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🩺 Chiropractors
+                    </button>
+                    <button onclick="showIndustryInfo('cosmetic_surgeons', '💉 Cosmetic Surgery')" class="industry-button bg-pink-500 hover:bg-pink-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        💉 Cosmetic Surgery
+                    </button>
+                    <button onclick="showIndustryInfo('real_estate_broker', '🏠 Real Estate Broker')" class="industry-button bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🏠 Real Estate Broker
+                    </button>
+                    <button onclick="showIndustryInfo('attorney', '⚖️ Attorney')" class="industry-button bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        ⚖️ Attorney
+                    </button>
+                    <button onclick="showIndustryInfo('home_improvement', '🛠️ Home Improvement')" class="industry-button bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🛠️ Home Improvement
+                    </button>
+                    <button onclick="showIndustryInfo('logistics', '🚚 Logistics')" class="industry-button bg-indigo-500 hover:bg-indigo-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🚚 Logistics
+                    </button>
+                    <button onclick="showIndustryInfo('motel', '🏨 Motel')" class="industry-button bg-teal-500 hover:bg-teal-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🏨 Motel
+                    </button>
+                    <button onclick="showIndustryInfo('bed_breakfast', '🛏️ Bed & Breakfast')" class="industry-button bg-rose-500 hover:bg-rose-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🛏️ Bed & Breakfast
+                    </button>
+                </div>
+
+                <div id="mcashAdvanceButtons" class="hidden grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
+                    <button onclick="showIndustryInfo('restaurant', '🍽️ Restaurants')" class="industry-button bg-red-500 hover:bg-red-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🍽️ Restaurants
+                    </button>
+                    <button onclick="showIndustryInfo('dentist', '🦷 Dentists')" class="industry-button bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🦷 Dentists
+                    </button>
+                    <button onclick="showIndustryInfo('construction', '🏗️ Construction')" class="industry-button bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🏗️ Construction
+                    </button>
+                    <button onclick="showIndustryInfo('retail', '🛍️ Retail')" class="industry-button bg-blue-500 hover:bg-blue-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🛍️ Retail
+                    </button>
+                    <button onclick="showIndustryInfo('transport', '🚚 Transport')" class="industry-button bg-green-500 hover:bg-green-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🚚 Transport
+                    </button>
+                    <button onclick="showIndustryInfo('manufacturing', '🏭 Manufacturing')" class="industry-button bg-purple-500 hover:bg-purple-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🏭 Manufacturing
+                    </button>
+                    <button onclick="showIndustryInfo('logistics', '📦 Logistics')" class="industry-button bg-indigo-500 hover:bg-indigo-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        📦 Logistics
+                    </button>
+                    <button onclick="showIndustryInfo('motel', '🏨 Motel')" class="industry-button bg-teal-500 hover:bg-teal-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🏨 Motel
+                    </button>
+                    <button onclick="showIndustryInfo('bed_breakfast', '🛏️ Bed & Breakfast')" class="industry-button bg-rose-500 hover:bg-rose-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        🛏️ Bed & Breakfast
+                    </button>
+                    <button onclick="showIndustryInfo('seasonal', '📅 Seasonal Business')" class="industry-button bg-yellow-500 hover:bg-yellow-600 text-white p-3 rounded-lg font-semibold transition duration-200 text-sm">
+                        📅 Seasonal Business
+                    </button>
+                </div>
+
+                <!-- Enhanced Filter Controls -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                    <!-- Industry Filter -->
+                    <div>
+                        <label for="industry-select" class="block text-sm font-medium text-gray-700">Industry Focus</label>
+                        <select id="industry-select" class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="all">All Industries</option>
+                            <option value="restaurant">Restaurants & Food</option>
+                            <option value="dentist">Dentists</option>
+                            <option value="healthcare">Healthcare</option>
+                            <option value="chiropractors">Chiropractors</option>
+                            <option value="cosmetic_surgeons">Cosmetic Surgeons</option>
+                            <option value="real_estate_broker">Real Estate Broker</option>
+                            <option value="real_estate_investors">Real Estate Investors</option>
+                            <option value="attorney">Attorneys</option>
+                            <option value="home_improvement">Home Improvement</option>
+                            <option value="solar_energy">Solar Energy</option>
+                            <option value="roofing">Roofing</option>
+                            <option value="hvac">HVAC</option>
+                            <option value="plumber">Plumber</option>
+                            <option value="electrician">Electrician</option>
+                            <option value="logistics">Logistics</option>
+                            <option value="motel">Motel</option>
+                            <option value="bed_breakfast">Bed & Breakfast</option>
+                            <option value="wedding_planners">Wedding Planners</option>
+                            <option value="construction">Construction</option>
+                            <option value="retail">Retail</option>
+                            <option value="transport">Transport</option>
+                            <option value="manufacturing">Manufacturing</option>
+                            <option value="professional">Professional Services</option>
+                            <option value="beauty">Beauty & Wellness</option>
+                            <option value="real_estate">Real Estate</option>
+                            <option value="other">Other Industry</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Other Industry Input -->
+                    <div id="other-industry-container" class="hidden">
+                        <label for="other-industry-input" class="block text-sm font-medium text-gray-700">Specify Industry</label>
+                        <input type="text" id="other-industry-input" placeholder="Enter specific industry..." class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 other-industry-input">
+                    </div>
+                    
+                    <!-- Location Filter -->
+                    <div>
+                        <label for="location-select" class="block text-sm font-medium text-gray-700">Target Location</label>
+                        <select id="location-select" class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="all">Anywhere in US</option>
+                            <option value="california">California</option>
+                            <option value="new_york">New York</option>
+                            <option value="texas">Texas</option>
+                            <option value="florida">Florida</option>
+                            <option value="major_cities">Major Cities Only</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Business Size Filter -->
+                    <div>
+                        <label for="size-select" class="block text-sm font-medium text-gray-700">Business Size</label>
+                        <select id="size-select" class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="all">Any Size</option>
+                            <option value="small">Small Business (1-10 employees)</option>
+                            <option value="medium">Medium Business (11-50 employees)</option>
+                            <option value="large">Large Business (50+ employees)</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Service-Specific Filter -->
+                    <div id="digitalMarketingFilter">
+                        <label for="dm-needs-select" class="block text-sm font-medium text-gray-700">Digital Marketing Needs</label>
+                        <select id="dm-needs-select" class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="all">All Digital Needs</option>
+                            <option value="web_design">Custom Web Design Needed</option>
+                            <option value="seo">Effective SEO Required</option>
+                            <option value="ssl">HTTP Protocol (Needs SSL)</option>
+                            <option value="reputation">Reputation Management</option>
+                            <option value="speed">Slow Website Speed</option>
+                            <option value="responsive">Not Mobile Responsive</option>
+                        </select>
+                    </div>
+
+                    <div id="mcashAdvanceFilter" class="hidden">
+                        <label for="mca-needs-select" class="block text-sm font-medium text-gray-700">MCA Qualification Factors</label>
+                        <select id="mca-needs-select" class="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500">
+                            <option value="all">All MCA Opportunities</option>
+                            <option value="expansion">Business Expansion Funding</option>
+                            <option value="equipment">Equipment Purchase Needs</option>
+                            <option value="inventory">Inventory Financing</option>
+                            <option value="cashflow">Cash Flow Challenges</option>
+                            <option value="seasonal">Seasonal Business Needs</option>
+                            <option value="growth">Rapid Growth Funding</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Search Actions -->
+                <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
+                    <button id="search-btn" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center min-w-[200px]">
+                        <i class="fas fa-bolt mr-2"></i>
+                        Generate Live Leads
+                    </button>
+                    <button id="refresh-btn" class="bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center min-w-[200px]">
+                        <i class="fas fa-sync-alt mr-2"></i>
+                        Refresh Results
+                    </button>
+                </div>
+
+                <!-- Loading Indicator -->
+                <div id="loading-indicator" class="hidden mt-6 text-center">
+                    <div class="inline-flex items-center bg-blue-100 text-blue-800 px-4 py-2 rounded-full">
+                        <div class="w-4 h-4 border-2 border-blue-800 border-t-transparent rounded-full animate-spin mr-2"></div>
+                        <span class="font-semibold" id="loadingText">Scanning business databases for fresh leads...</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real-Time Results Section -->
+            <div class="bg-white rounded-2xl p-6 shadow-md border border-gray-200">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-2xl font-bold text-gray-800">🎯 Live Lead Results</h2>
+                    <div class="flex items-center space-x-4">
+                        <span class="text-sm text-gray-600" id="resultsCount">0 leads found</span>
+                        <button onclick="exportLeads()" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold transition duration-200">
+                            <i class="fas fa-download mr-1"></i> Export
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Results Area -->
+                <div id="results-area" class="space-y-4">
+                    <!-- Leads will appear here dynamically -->
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-search fa-3x mb-4 opacity-50"></i>
+                        <p class="text-lg">Click "Generate Live Leads" to discover businesses needing your services</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Strategic State & Industry Analysis Section -->
+        <div class="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 shadow-md border border-purple-200 mx-6 mb-6">
+            <h2 class="text-2xl font-bold text-gray-800 mb-4">🎯 Strategic State & Industry Analysis</h2>
+            <p class="text-gray-600 mb-6">
+                Discover which states and industries are MOST receptive to your services. Get proven approach strategies for each market.
+            </p>
+
+            <!-- Analysis Controls -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <div>
+                    <label for="analysis-service" class="block text-sm font-medium text-gray-700 mb-2">Service Type</label>
+                    <select id="analysis-service" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="digital_marketing">Digital Marketing</option>
+                        <option value="merchant_cash_advance">Merchant Cash Advance</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="analysis-industry" class="block text-sm font-medium text-gray-700 mb-2">Target Industry</label>
+                    <select id="analysis-industry" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="restaurant">Restaurants</option>
+                        <option value="dentist">Dentists</option>
+                        <option value="healthcare">Healthcare</option>
+                        <option value="construction">Construction</option>
+                        <option value="retail">Retail</option>
+                        <option value="professional">Professional Services</option>
+                        <option value="real_estate">Real Estate</option>
+                        <option value="logistics">Logistics</option>
+                        <option value="motel">Motel</option>
+                        <option value="bed_breakfast">Bed & Breakfast</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="analysis-state" class="block text-sm font-medium text-gray-700 mb-2">Target State</label>
+                    <select id="analysis-state" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                        <option value="california">California</option>
+                        <option value="texas">Texas</option>
+                        <option value="florida">Florida</option>
+                        <option value="new_york">New York</option>
+                        <option value="illinois">Illinois</option>
+                        <option value="colorado">Colorado</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Analysis Action -->
+            <div class="text-center mb-6">
+                <button id="analyze-market-btn" class="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white p-4 rounded-lg font-semibold transition duration-200 shadow-lg">
+                    <i class="fas fa-chart-line mr-2"></i>
+                    Analyze Market Opportunity
+                </button>
+            </div>
+
+            <!-- Market Analysis Results -->
+            <div id="market-analysis-area" class="space-y-6">
+                <div class="text-center py-8 text-gray-500 bg-white rounded-xl border-2 border-dashed border-gray-300">
+                    <i class="fas fa-brain fa-3x mb-4 opacity-50"></i>
+                    <p class="text-lg font-semibold">Select service, industry and state for market analysis</p>
+                    <p class="text-sm mt-2">Get proven strategies and approach techniques</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Industry Info Popup -->
+    <div id="industry-popup" class="industry-popup hidden">
+        <div class="industry-popup-content">
+            <div class="flex justify-between items-start mb-4">
+                <h3 id="popup-industry-name" class="text-xl font-bold text-gray-800"></h3>
+                <button id="close-popup" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="space-y-3">
+                <div class="bg-blue-50 p-3 rounded-lg">
+                    <h4 class="font-semibold text-blue-800 mb-1 text-sm">📊 Available Leads</h4>
+                    <div class="text-xl font-bold text-blue-600" id="popup-lead-count">0</div>
+                    <p class="text-xs text-blue-700 mt-1">Fresh leads ready for contact</p>
+                </div>
+                
+                <div class="bg-green-50 p-3 rounded-lg">
+                    <h4 class="font-semibold text-green-800 mb-1 text-sm">💰 Average Revenue</h4>
+                    <div class="text-lg font-bold text-green-600" id="popup-revenue">$0</div>
+                    <p class="text-xs text-green-700 mt-1">Typical business size</p>
+                </div>
+                
+                <div class="bg-purple-50 p-3 rounded-lg">
+                    <h4 class="font-semibold text-purple-800 mb-1 text-sm">🎯 Success Rate</h4>
+                    <div class="text-lg font-bold text-purple-600" id="popup-success-rate">0%</div>
+                    <p class="text-xs text-purple-700 mt-1">Historical conversion rate</p>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <button id="generate-industry-leads" class="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-2 rounded-lg font-semibold transition duration-200 text-sm">
+                    <i class="fas fa-bolt mr-2"></i> Generate Leads
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Analysis Overview Modal -->
+    <div id="analysis-overview-modal" class="fixed inset-0 research-modal hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-t-2xl text-white">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">📊 Analysis Overview</h2>
+                    <button id="close-analysis-modal" class="text-white hover:text-gray-200 text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <p class="mt-2 text-blue-100">Complete overview of your lead generation performance</p>
+            </div>
+            
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-200">
+                        <h3 class="font-bold text-blue-800 mb-2">📈 Lead Generation Stats</h3>
+                        <div class="space-y-2">
+                            <div class="flex justify-between">
+                                <span>Total Leads Generated:</span>
+                                <span class="font-bold" id="total-leads-count">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Hot Leads:</span>
+                                <span class="font-bold text-red-600" id="hot-leads-count">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Warm Leads:</span>
+                                <span class="font-bold text-yellow-600" id="warm-leads-count">0</span>
+                            </div>
+                            <div class="flex justify-between">
+                                <span>Cold Leads:</span>
+                                <span class="font-bold text-gray-600" id="cold-leads-count">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded-xl border border-green-200">
+                        <h3 class="font-bold text-green-800 mb-2">🎯 Industry Distribution</h3>
+                        <div class="space-y-2" id="industry-distribution">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-purple-50 p-4 rounded-xl border border-purple-200 mb-6">
+                    <h3 class="font-bold text-purple-800 mb-2">🚀 Performance Metrics</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-600" id="avg-lead-score">0</div>
+                            <div class="text-sm text-purple-800">Avg Lead Score</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-600" id="top-industry">-</div>
+                            <div class="text-sm text-purple-800">Top Industry</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-600" id="top-location">-</div>
+                            <div class="text-sm text-purple-800">Top Location</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-600" id="success-rate">0%</div>
+                            <div class="text-sm text-purple-800">Success Rate</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-yellow-50 p-4 rounded-xl border border-yellow-200">
+                    <h3 class="font-bold text-yellow-800 mb-2">💡 Recommendations</h3>
+                    <div class="space-y-3" id="recommendations-list">
+                        <!-- Will be populated dynamically -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Research Strategy Modal -->
+    <div id="research-modal" class="fixed inset-0 research-modal hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
+            <div class="bg-gradient-to-r from-blue-600 to-purple-600 p-6 rounded-t-2xl text-white">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold">🔍 Research & Call Strategy</h2>
+                    <button id="close-research-modal" class="text-white hover:text-gray-200 text-2xl">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="p-6">
+                <div id="research-content">
+                    <!-- Will be populated dynamically -->
+                </div>
+                
+                <div class="mt-6 flex justify-between">
+                    <button id="open-google-research" class="google-search text-white px-4 py-2 rounded-lg font-semibold">
+                        <i class="fas fa-search mr-2"></i> Open Google Research
+                    </button>
+                    <button id="close-research-btn" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg font-semibold">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 🚀 OPTIMIZED DUAL LEAD GENERATION ENGINE
+        let currentService = 'digital_marketing';
+        let currentLeads = [];
+        let leadIdCounter = 1;
+        let totalLeadsGenerated = 0;
+        let currentIndustry = '';
+
+        // 🎯 PRE-GENERATED LEAD POOLS for INSTANT RESULTS
+        let dmLeadPool = [];
+        let mcaLeadPool = [];
+        let poolsGenerated = false;
+
+        // 🎯 Industry data with lead counts and revenue information
+        const industryData = {
+            restaurant: {
+                leadCount: 142,
+                revenue: '$500,000 - $1,000,000',
+                successRate: '72%'
+            },
+            dentist: {
+                leadCount: 89,
+                revenue: '$750,000 - $1,500,000',
+                successRate: '68%'
+            },
+            chiropractors: {
+                leadCount: 67,
+                revenue: '$400,000 - $900,000',
+                successRate: '65%'
+            },
+            cosmetic_surgeons: {
+                leadCount: 45,
+                revenue: '$1,200,000 - $3,000,000',
+                successRate: '78%'
+            },
+            real_estate_broker: {
+                leadCount: 112,
+                revenue: '$600,000 - $1,200,000',
+                successRate: '70%'
+            },
+            attorney: {
+                leadCount: 98,
+                revenue: '$800,000 - $2,000,000',
+                successRate: '75%'
+            },
+            home_improvement: {
+                leadCount: 134,
+                revenue: '$450,000 - $950,000',
+                successRate: '69%'
+            },
+            logistics: {
+                leadCount: 76,
+                revenue: '$700,000 - $1,800,000',
+                successRate: '71%'
+            },
+            motel: {
+                leadCount: 54,
+                revenue: '$300,000 - $700,000',
+                successRate: '63%'
+            },
+            bed_breakfast: {
+                leadCount: 38,
+                revenue: '$200,000 - $500,000',
+                successRate: '60%'
+            }
+        };
+
+        // 🎯 Service Type Switching
+        document.getElementById('digitalMarketingTab').addEventListener('click', () => {
+            switchService('digital_marketing');
+        });
+
+        document.getElementById('mcashAdvanceTab').addEventListener('click', () => {
+            switchService('merchant_cash_advance');
+        });
+
+        function switchService(service) {
+            currentService = service;
+            
+            // Update UI
+            const dmTab = document.getElementById('digitalMarketingTab');
+            const mcaTab = document.getElementById('mcashAdvanceTab');
+            const dmButtons = document.getElementById('digitalMarketingButtons');
+            const mcaButtons = document.getElementById('mcashAdvanceButtons');
+            const dmFilter = document.getElementById('digitalMarketingFilter');
+            const mcaFilter = document.getElementById('mcashAdvanceFilter');
+            const serviceTitle = document.getElementById('serviceTitle');
+            const serviceDescription = document.getElementById('serviceDescription');
+
+            if (service === 'digital_marketing') {
+                dmTab.classList.add('active');
+                mcaTab.classList.remove('active');
+                dmButtons.classList.remove('hidden');
+                mcaButtons.classList.add('hidden');
+                dmFilter.classList.remove('hidden');
+                mcaFilter.classList.add('hidden');
+                serviceTitle.textContent = '🎯 Real-Time Digital Marketing Lead Discovery';
+                serviceDescription.textContent = 'Discover fresh business leads instantly. Our AI-powered engine scans multiple data sources to find businesses needing your services RIGHT NOW.';
+            } else {
+                dmTab.classList.remove('active');
+                mcaTab.classList.add('active');
+                dmButtons.classList.add('hidden');
+                mcaButtons.classList.remove('hidden');
+                dmFilter.classList.add('hidden');
+                mcaFilter.classList.remove('hidden');
+                serviceTitle.textContent = '💰 Real-Time Merchant Cash Advance Lead Discovery';
+                serviceDescription.textContent = 'Find businesses actively seeking funding. Our AI-powered engine identifies cash flow opportunities and expansion-ready businesses.';
+            }
+        }
+
+        // 🎯 Industry Selection Handling
+        document.getElementById('industry-select').addEventListener('change', function() {
+            const otherIndustryContainer = document.getElementById('other-industry-container');
+            if (this.value === 'other') {
+                otherIndustryContainer.classList.remove('hidden');
+            } else {
+                otherIndustryContainer.classList.add('hidden');
+                currentIndustry = this.value;
+            }
+        });
+
+        // 🎯 Generate Pre-filled Lead Pools for Instant Results
+        function generateLeadPools() {
+            if (poolsGenerated) return;
+            
+            // Digital Marketing Leads
+            dmLeadPool = Array.from({length: 50}, (_, i) => generateDigitalMarketingLead(i));
+            
+            // Merchant Cash Advance Leads
+            mcaLeadPool = Array.from({length: 50}, (_, i) => generateMCALead(i));
+            
+            poolsGenerated = true;
+            console.log(`🔥 Generated ${dmLeadPool.length} DM leads and ${mcaLeadPool.length} MCA leads`);
+        }
+
+        // 🎯 Digital Marketing Lead Generator
+        function generateDigitalMarketingLead(index) {
+            const industries = ['restaurant', 'dentist', 'chiropractors', 'cosmetic_surgeons', 'real_estate_broker', 'attorney', 'home_improvement', 'logistics', 'motel', 'bed_breakfast'];
+            const locations = ['New York, NY', 'Los Angeles, CA', 'Chicago, IL', 'Miami, FL', 'Dallas, TX', 'Phoenix, AZ', 'Atlanta, GA', 'Denver, CO', 'Seattle, WA', 'Boston, MA'];
+            const businessNames = [
+                'Elite Dining', 'Modern Smile Dental', 'Spine Care Center', 'Aesthetic Beauty Clinic', 'Prime Realty Group',
+                'Legal Solutions Firm', 'Home Renovation Pros', 'Swift Logistics', 'Comfort Inn', 'Cozy Retreat B&B',
+                'Urban Bistro', 'Family Dental Care', 'Wellness Chiropractic', 'Cosmetic Excellence', 'Metro Properties',
+                'Justice Law Partners', 'Dream Home Builders', 'FastTrack Shipping', 'Rest Easy Motel', 'Heritage Inn'
+            ];
+            
+            const industry = industries[Math.floor(Math.random() * industries.length)];
+            const location = locations[Math.floor(Math.random() * locations.length)];
+            const name = businessNames[Math.floor(Math.random() * businessNames.length)];
+            
+            const leadScore = Math.floor(Math.random() * 40) + 60; // 60-100
+            const urgency = ['High', 'Medium', 'Low'][Math.floor(Math.random() * 3)];
+            const needs = ['web_design', 'seo', 'ssl', 'reputation', 'speed', 'responsive'][Math.floor(Math.random() * 6)];
+            
+            return {
+                id: `dm-${index + 1}`,
+                name: `${name} ${index + 1}`,
+                industry: industry,
+                location: location,
+                score: leadScore,
+                urgency: urgency,
+                needs: needs,
+                contact: `contact@${name.toLowerCase().replace(/\s+/g, '')}${index + 1}.com`,
+                phone: `(${Math.floor(Math.random() * 900) + 100})-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+                website: `www.${name.toLowerCase().replace(/\s+/g, '')}${index + 1}.com`,
+                lastUpdated: 'Just now',
+                service: 'digital_marketing'
+            };
+        }
+
+        // 🎯 Merchant Cash Advance Lead Generator
+        function generateMCALead(index) {
+            const industries = ['restaurant', 'dentist', 'construction', 'retail', 'transport', 'manufacturing', 'logistics', 'motel', 'bed_breakfast', 'seasonal'];
+            const locations = ['New York, NY', 'Los Angeles, CA', 'Chicago, IL', 'Miami, FL', 'Dallas, TX', 'Phoenix, AZ', 'Atlanta, GA', 'Denver, CO', 'Seattle, WA', 'Boston, MA'];
+            const businessNames = [
+                'Gourmet Kitchen', 'Dental Wellness', 'BuildRight Construction', 'Urban Retail Hub', 'Swift Transport Co',
+                'Precision Manufacturing', 'Global Logistics', 'Traveler Rest Motel', 'Countryside B&B', 'Seasonal Ventures',
+                'Bistro Central', 'Smile Perfect Dental', 'Solid Foundations', 'City Market Retail', 'Reliable Haulers',
+                'Quality Makers Inc', 'Express Logistics', 'Comfort Stay Motel', 'Mountain View Inn', 'Holiday Business Co'
+            ];
+            
+            const industry = industries[Math.floor(Math.random() * industries.length)];
+            const location = locations[Math.floor(Math.random() * locations.length)];
+            const name = businessNames[Math.floor(Math.random() * businessNames.length)];
+            
+            const leadScore = Math.floor(Math.random() * 40) + 60; // 60-100
+            const fundingNeeds = ['expansion', 'equipment', 'inventory', 'cashflow', 'seasonal', 'growth'][Math.floor(Math.random() * 6)];
+            const revenue = Math.floor(Math.random() * 2000000) + 100000;
+            
+            return {
+                id: `mca-${index + 1}`,
+                name: `${name} ${index + 1}`,
+                industry: industry,
+                location: location,
+                score: leadScore,
+                fundingNeeds: fundingNeeds,
+                revenue: revenue,
+                contact: `owner@${name.toLowerCase().replace(/\s+/g, '')}${index + 1}.com`,
+                phone: `(${Math.floor(Math.random() * 900) + 100})-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`,
+                website: `www.${name.toLowerCase().replace(/\s+/g, '')}${index + 1}.com`,
+                lastUpdated: 'Just now',
+                service: 'merchant_cash_advance'
+            };
+        }
+
+        // 🎯 Main Lead Generation Function
+        document.getElementById('search-btn').addEventListener('click', generateLeads);
+        document.getElementById('refresh-btn').addEventListener('click', generateLeads);
+
+        function generateLeads() {
+            // Ensure lead pools are generated
+            generateLeadPools();
+            
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const loadingText = document.getElementById('loadingText');
+            const resultsArea = document.getElementById('results-area');
+            
+            // Show loading
+            loadingIndicator.classList.remove('hidden');
+            loadingText.textContent = currentService === 'digital_marketing' 
+                ? 'Scanning business databases for digital marketing opportunities...' 
+                : 'Analyzing financial data for funding opportunities...';
+            
+            // Clear previous results
+            resultsArea.innerHTML = '';
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                // Get filtered leads from pool
+                const filteredLeads = filterLeadsFromPool();
+                
+                // Update UI with results
+                displayLeads(filteredLeads);
+                
+                // Hide loading
+                loadingIndicator.classList.add('hidden');
+                
+                // Update counters
+                updateLeadCounters(filteredLeads);
+                
+            }, 1500); // Reduced delay for better UX
+        }
+
+        // 🎯 Filter leads from pre-generated pool
+        function filterLeadsFromPool() {
+            const industryFilter = document.getElementById('industry-select').value;
+            const locationFilter = document.getElementById('location-select').value;
+            const sizeFilter = document.getElementById('size-select').value;
+            
+            const pool = currentService === 'digital_marketing' ? dmLeadPool : mcaLeadPool;
+            
+            return pool.filter(lead => {
+                // Industry filter
+                if (industryFilter !== 'all' && industryFilter !== 'other' && lead.industry !== industryFilter) {
+                    return false;
+                }
+                
+                // Location filter (simplified)
+                if (locationFilter !== 'all') {
+                    if (locationFilter === 'major_cities' && !['New York, NY', 'Los Angeles, CA', 'Chicago, IL', 'Miami, FL'].includes(lead.location)) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            }).slice(0, 12); // Return first 12 matching leads
+        }
+
+        // 🎯 Display leads in UI
+        function displayLeads(leads) {
+            const resultsArea = document.getElementById('results-area');
+            
+            if (leads.length === 0) {
+                resultsArea.innerHTML = `
+                    <div class="text-center py-12 text-gray-500">
+                        <i class="fas fa-exclamation-triangle fa-3x mb-4 opacity-50"></i>
+                        <p class="text-lg">No leads found matching your criteria</p>
+                        <p class="text-sm mt-2">Try adjusting your filters</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            resultsArea.innerHTML = leads.map(lead => createLeadCard(lead)).join('');
+        }
+
+        // 🎯 Create individual lead card
+        function createLeadCard(lead) {
+            const scoreColor = lead.score >= 80 ? 'bg-green-500' : lead.score >= 60 ? 'bg-yellow-500' : 'bg-red-500';
+            const urgencyColor = lead.urgency === 'High' ? 'bg-red-500' : lead.urgency === 'Medium' ? 'bg-yellow-500' : 'bg-green-500';
+            
+            if (currentService === 'digital_marketing') {
+                return `
+                    <div class="lead-card bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">${lead.name}</h3>
+                                <div class="flex items-center mt-1 space-x-2">
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-semibold">${formatIndustry(lead.industry)}</span>
+                                    <span class="text-gray-600 text-sm">📍 ${lead.location}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="${urgencyColor} text-white px-2 py-1 rounded-full text-xs font-semibold">${lead.urgency} Priority</span>
+                                <span class="${scoreColor} text-white px-2 py-1 rounded-full text-xs font-semibold">${lead.score}/100</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-2">🎯 Digital Marketing Needs</h4>
+                                <p class="text-sm text-gray-600">${getDigitalMarketingNeeds(lead.needs)}</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-2">📞 Contact Info</h4>
+                                <div class="text-sm text-gray-600 space-y-1">
+                                    <div>📧 ${lead.contact}</div>
+                                    <div>📱 ${lead.phone}</div>
+                                    <div>🌐 ${lead.website}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-500">🕒 ${lead.lastUpdated}</span>
+                            <div class="flex space-x-2">
+                                <button onclick="researchBusiness('${lead.name}', '${lead.industry}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-200">
+                                    <i class="fas fa-search mr-1"></i> Research
+                                </button>
+                                <button onclick="saveLead('${lead.id}')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-200">
+                                    <i class="fas fa-save mr-1"></i> Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // MCA Lead Card
+                return `
+                    <div class="lead-card bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-300">
+                        <div class="flex justify-between items-start mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-gray-800">${lead.name}</h3>
+                                <div class="flex items-center mt-1 space-x-2">
+                                    <span class="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-semibold">${formatIndustry(lead.industry)}</span>
+                                    <span class="text-gray-600 text-sm">📍 ${lead.location}</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-2">
+                                <span class="${urgencyColor} text-white px-2 py-1 rounded-full text-xs font-semibold">${lead.urgency || 'Medium'} Priority</span>
+                                <span class="${scoreColor} text-white px-2 py-1 rounded-full text-xs font-semibold">${lead.score}/100</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-2">💰 Funding Profile</h4>
+                                <div class="text-sm text-gray-600 space-y-1">
+                                    <div>📊 Annual Revenue: $${lead.revenue.toLocaleString()}</div>
+                                    <div>🎯 Needs: ${getMCANeeds(lead.fundingNeeds)}</div>
+                                    <div>🏢 Business Size: ${getBusinessSize(lead.revenue)}</div>
+                                </div>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold text-gray-700 mb-2">📞 Contact Info</h4>
+                                <div class="text-sm text-gray-600 space-y-1">
+                                    <div>📧 ${lead.contact}</div>
+                                    <div>📱 ${lead.phone}</div>
+                                    <div>🌐 ${lead.website}</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs text-gray-500">🕒 ${lead.lastUpdated}</span>
+                            <div class="flex space-x-2">
+                                <button onclick="researchBusiness('${lead.name}', '${lead.industry}')" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-200">
+                                    <i class="fas fa-search mr-1"></i> Research
+                                </button>
+                                <button onclick="saveLead('${lead.id}')" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold transition duration-200">
+                                    <i class="fas fa-save mr-1"></i> Save
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        // 🎯 Helper functions
+        function formatIndustry(industry) {
+            return industry.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+
+        function getDigitalMarketingNeeds(need) {
+            const needsMap = {
+                'web_design': 'Custom Web Design Needed',
+                'seo': 'Effective SEO Required',
+                'ssl': 'HTTP Protocol (Needs SSL)',
+                'reputation': 'Reputation Management',
+                'speed': 'Slow Website Speed',
+                'responsive': 'Not Mobile Responsive'
+            };
+            return needsMap[need] || 'Digital Marketing Services';
+        }
+
+        function getMCANeeds(need) {
+            const needsMap = {
+                'expansion': 'Business Expansion Funding',
+                'equipment': 'Equipment Purchase Needs',
+                'inventory': 'Inventory Financing',
+                'cashflow': 'Cash Flow Challenges',
+                'seasonal': 'Seasonal Business Needs',
+                'growth': 'Rapid Growth Funding'
+            };
+            return needsMap[need] || 'Business Funding';
+        }
+
+        function getBusinessSize(revenue) {
+            if (revenue < 500000) return 'Small (1-10 employees)';
+            if (revenue < 2000000) return 'Medium (11-50 employees)';
+            return 'Large (50+ employees)';
+        }
+
+        function updateLeadCounters(leads) {
+            document.getElementById('resultsCount').textContent = `${leads.length} leads found`;
+            document.getElementById('leadCount').textContent = leads.length;
+            totalLeadsGenerated += leads.length;
+        }
+
+        // 🎯 Industry Info Popup Functions
+        function showIndustryInfo(industry, industryName) {
+            const popup = document.getElementById('industry-popup');
+            const industryInfo = industryData[industry] || { leadCount: 0, revenue: '$0', successRate: '0%' };
+            
+            document.getElementById('popup-industry-name').textContent = industryName;
+            document.getElementById('popup-lead-count').textContent = industryInfo.leadCount;
+            document.getElementById('popup-revenue').textContent = industryInfo.revenue;
+            document.getElementById('popup-success-rate').textContent = industryInfo.successRate;
+            
+            // Set current industry for lead generation
+            currentIndustry = industry;
+            document.getElementById('industry-select').value = industry;
+            
+            popup.classList.remove('hidden');
+        }
+
+        // Close popup when close button is clicked
+        document.getElementById('close-popup').addEventListener('click', function() {
+            document.getElementById('industry-popup').classList.add('hidden');
+        });
+
+        // Generate leads for specific industry
+        document.getElementById('generate-industry-leads').addEventListener('click', function() {
+            document.getElementById('industry-popup').classList.add('hidden');
+            generateLeads();
+        });
+
+        // 🎯 Analysis Overview Modal
+        document.getElementById('analysis-overview-btn').addEventListener('click', function() {
+            showAnalysisOverview();
+        });
+
+        document.getElementById('close-analysis-modal').addEventListener('click', function() {
+            document.getElementById('analysis-overview-modal').classList.add('hidden');
+        });
+
+        function showAnalysisOverview() {
+            const modal = document.getElementById('analysis-overview-modal');
+            
+            // Update analysis data
+            updateAnalysisData();
+            
+            modal.classList.remove('hidden');
+        }
+
+        function updateAnalysisData() {
+            // Update lead counts
+            const totalLeads = currentLeads.length;
+            const hotLeads = currentLeads.filter(lead => lead.score >= 80).length;
+            const warmLeads = currentLeads.filter(lead => lead.score >= 60 && lead.score < 80).length;
+            const coldLeads = currentLeads.filter(lead => lead.score < 60).length;
+            
+            document.getElementById('total-leads-count').textContent = totalLeads;
+            document.getElementById('hot-leads-count').textContent = hotLeads;
+            document.getElementById('warm-leads-count').textContent = warmLeads;
+            document.getElementById('cold-leads-count').textContent = coldLeads;
+            
+            // Update industry distribution
+            const industryDist = document.getElementById('industry-distribution');
+            const industryCounts = {};
+            
+            currentLeads.forEach(lead => {
+                industryCounts[lead.industry] = (industryCounts[lead.industry] || 0) + 1;
+            });
+            
+            industryDist.innerHTML = Object.entries(industryCounts)
+                .map(([industry, count]) => `
+                    <div class="flex justify-between">
+                        <span>${formatIndustry(industry)}:</span>
+                        <span class="font-bold">${count}</span>
+                    </div>
+                `).join('');
+            
+            // Update performance metrics
+            const avgScore = currentLeads.length > 0 
+                ? Math.round(currentLeads.reduce((sum, lead) => sum + lead.score, 0) / currentLeads.length)
+                : 0;
+            
+            const topIndustry = Object.entries(industryCounts).sort((a, b) => b[1] - a[1])[0];
+            const topLocation = 'California'; // Simplified
+            
+            document.getElementById('avg-lead-score').textContent = avgScore;
+            document.getElementById('top-industry').textContent = topIndustry ? formatIndustry(topIndustry[0]) : '-';
+            document.getElementById('top-location').textContent = topLocation;
+            document.getElementById('success-rate').textContent = `${Math.min(100, Math.round((hotLeads / totalLeads) * 100))}%`;
+            
+            // Update recommendations
+            const recommendations = document.getElementById('recommendations-list');
+            const recs = [
+                'Focus on high-scoring leads first for better conversion rates',
+                'Consider following up with warm leads within 24 hours',
+                'Research industry-specific pain points before calling',
+                'Customize your approach based on business size and location',
+                'Track follow-up activities to improve conversion rates'
+            ];
+            
+            recommendations.innerHTML = recs.map(rec => `
+                <div class="flex items-start">
+                    <i class="fas fa-lightbulb text-yellow-500 mt-1 mr-2"></i>
+                    <span>${rec}</span>
+                </div>
+            `).join('');
+        }
+
+        // 🎯 Research Functionality
+        function researchBusiness(businessName, industry) {
+            const modal = document.getElementById('research-modal');
+            const researchContent = document.getElementById('research-content');
+            
+            researchContent.innerHTML = `
+                <div class="space-y-4">
+                    <div class="bg-blue-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-blue-800 mb-2">🔍 Research Strategy for ${businessName}</h3>
+                        <p class="text-blue-700">${getResearchStrategy(industry)}</p>
+                    </div>
+                    
+                    <div class="bg-green-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-green-800 mb-2">📞 Call Strategy</h3>
+                        <p class="text-green-700">${getCallStrategy(industry)}</p>
+                    </div>
+                    
+                    <div class="bg-purple-50 p-4 rounded-lg">
+                        <h3 class="font-bold text-purple-800 mb-2">💡 Key Talking Points</h3>
+                        <ul class="list-disc list-inside text-purple-700 space-y-1">
+                            ${getTalkingPoints(industry).map(point => `<li>${point}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+            
+            modal.classList.remove('hidden');
+        }
+
+        function getResearchStrategy(industry) {
+            const strategies = {
+                restaurant: "Research their online reviews, menu pricing, social media presence, and local competition. Look for gaps in their digital marketing strategy.",
+                dentist: "Check their website for modern design, online booking capabilities, and patient reviews. Research local dental competition and service gaps.",
+                chiropractors: "Analyze their online reputation, service offerings, and patient acquisition strategies. Look for opportunities in local SEO and community engagement.",
+                cosmetic_surgeons: "Research their before/after gallery, patient testimonials, and procedure pricing. Analyze their social media presence and review platforms.",
+                real_estate_broker: "Study their property listings, agent profiles, and market coverage. Look for gaps in digital marketing and lead generation strategies.",
+                attorney: "Analyze their practice areas, case results, and client reviews. Research their online presence and competitive positioning in the legal market."
+            };
+            return strategies[industry] || "Research the business's online presence, reviews, competitors, and industry trends to understand their needs and pain points.";
+        }
+
+        function getCallStrategy(industry) {
+            const strategies = {
+                restaurant: "Focus on how digital marketing can increase reservations and takeout orders. Mention local SEO and social media engagement strategies.",
+                dentist: "Discuss how modern web design and online booking can reduce no-shows and attract new patients. Highlight reputation management benefits.",
+                chiropractors: "Talk about patient education content and local community engagement. Emphasize the importance of mobile-responsive design for new patients.",
+                cosmetic_surgeons: "Focus on before/after galleries and patient testimonials. Discuss social media advertising and lead generation for elective procedures.",
+                real_estate_broker: "Highlight property showcase capabilities and lead capture strategies. Discuss mobile optimization for property searches.",
+                attorney: "Emphasize case result showcases and client testimonials. Discuss lead generation for specific practice areas and competitive differentiation."
+            };
+            return strategies[industry] || "Focus on understanding their current challenges and presenting tailored solutions that address their specific business needs.";
+        }
+
+        function getTalkingPoints(industry) {
+            const points = {
+                restaurant: [
+                    "Increasing online reservations and takeout orders",
+                    "Managing and responding to online reviews",
+                    "Social media engagement and promotion",
+                    "Local SEO for restaurant discovery",
+                    "Mobile-friendly menu and ordering system"
+                ],
+                dentist: [
+                    "Reducing patient no-shows with online booking",
+                    "Showcasing dental technology and expertise",
+                    "Managing online reputation and reviews",
+                    "Attracting new patients through digital channels",
+                    "Patient education and engagement"
+                ],
+                chiropractors: [
+                    "Patient education and wellness content",
+                    "Online appointment scheduling convenience",
+                    "Local community engagement strategies",
+                    "Showcasing treatment approaches and success stories",
+                    "Mobile accessibility for new patient acquisition"
+                ]
+            };
+            return points[industry] || [
+                "Current digital presence assessment",
+                "Competitive landscape analysis",
+                "Lead generation opportunities",
+                "Customer engagement strategies",
+                "Return on investment potential"
+            ];
+        }
+
+        // Close research modal
+        document.getElementById('close-research-modal').addEventListener('click', function() {
+            document.getElementById('research-modal').classList.add('hidden');
+        });
+
+        document.getElementById('close-research-btn').addEventListener('click', function() {
+            document.getElementById('research-modal').classList.add('hidden');
+        });
+
+        // Google Research
+        document.getElementById('open-google-research').addEventListener('click', function() {
+            const businessName = document.querySelector('#research-content h3')?.textContent.replace('🔍 Research Strategy for ', '') || 'business';
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(businessName)}`, '_blank');
+        });
+
+        // 🎯 Export functionality
+        function exportLeads() {
+            if (currentLeads.length === 0) {
+                alert('No leads to export! Generate some leads first.');
+                return;
+            }
+            
+            const csvContent = convertLeadsToCSV(currentLeads);
+            downloadCSV(csvContent, `${currentService}_leads_${new Date().toISOString().split('T')[0]}.csv`);
+            alert(`Exported ${currentLeads.length} leads to CSV file!`);
+        }
+
+        function convertLeadsToCSV(leads) {
+            const headers = ['Name', 'Industry', 'Location', 'Score', 'Contact', 'Phone', 'Website', 'Last Updated'];
+            const rows = leads.map(lead => [
+                lead.name,
+                formatIndustry(lead.industry),
+                lead.location,
+                lead.score,
+                lead.contact,
+                lead.phone,
+                lead.website,
+                lead.lastUpdated
+            ]);
+            
+            return [headers, ...rows].map(row => row.map(field => `"${field}"`).join(',')).join('\n');
+        }
+
+        function downloadCSV(csvContent, filename) {
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // 🎯 Save lead functionality
+        function saveLead(leadId) {
+            const lead = [...dmLeadPool, ...mcaLeadPool].find(l => l.id === leadId);
+            if (lead) {
+                // In a real app, this would save to a database
+                alert(`✅ Lead "${lead.name}" saved to your favorites!`);
+                // You could add Firebase Firestore integration here
+            }
+        }
+
+        // 🎯 Market Analysis Functionality
+        document.getElementById('analyze-market-btn').addEventListener('click', function() {
+            analyzeMarketOpportunity();
+        });
+
+        function analyzeMarketOpportunity() {
+            const service = document.getElementById('analysis-service').value;
+            const industry = document.getElementById('analysis-industry').value;
+            const state = document.getElementById('analysis-state').value;
+            
+            const analysisArea = document.getElementById('market-analysis-area');
+            
+            // Simulate analysis
+            analysisArea.innerHTML = `
+                <div class="bg-white rounded-xl p-6 border-2 border-purple-200 shadow-lg">
+                    <div class="text-center mb-6">
+                        <div class="w-16 h-16 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-chart-line text-white text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-800">Market Analysis Complete</h3>
+                        <p class="text-gray-600">${formatIndustry(industry)} in ${formatState(state)}</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-blue-50 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-blue-600">${getMarketSize(industry, state)}</div>
+                            <div class="text-sm text-blue-800">Market Size Score</div>
+                        </div>
+                        <div class="bg-green-50 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-green-600">${getCompetitionLevel(industry, state)}</div>
+                            <div class="text-sm text-green-800">Competition Level</div>
+                        </div>
+                        <div class="bg-purple-50 p-4 rounded-lg text-center">
+                            <div class="text-2xl font-bold text-purple-600">${getGrowthPotential(industry, state)}</div>
+                            <div class="text-sm text-purple-800">Growth Potential</div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+                        <h4 class="font-bold text-yellow-800 mb-2">🎯 Recommended Approach Strategy</h4>
+                        <p class="text-yellow-700 text-sm">${getApproachStrategy(service, industry, state)}</p>
+                    </div>
+                    
+                    <div class="mt-4 bg-gray-50 p-4 rounded-lg">
+                        <h4 class="font-bold text-gray-800 mb-2">📊 Key Success Factors</h4>
+                        <ul class="list-disc list-inside text-gray-700 text-sm space-y-1">
+                            ${getSuccessFactors(service, industry).map(factor => `<li>${factor}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatState(state) {
+            return state.split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+        }
+
+        function getMarketSize(industry, state) {
+            const sizes = ['Small', 'Medium', 'Large', 'Very Large'];
+            return sizes[Math.floor(Math.random() * sizes.length)];
+        }
+
+        function getCompetitionLevel(industry, state) {
+            const levels = ['Low', 'Moderate', 'High', 'Very High'];
+            return levels[Math.floor(Math.random() * levels.length)];
+        }
+
+        function getGrowthPotential(industry, state) {
+            const potentials = ['Limited', 'Moderate', 'Strong', 'Exceptional'];
+            return potentials[Math.floor(Math.random() * potentials.length)];
+        }
+
+        function getApproachStrategy(service, industry, state) {
+            const strategies = {
+                digital_marketing: {
+                    restaurant: "Focus on local SEO and social media marketing. Restaurants in this area respond well to visual content and review management services.",
+                    dentist: "Emphasize modern website design and online booking systems. Dental practices here value reputation management and patient education content.",
+                    construction: "Highlight project portfolio showcases and lead generation forms. Construction companies respond well to case studies and client testimonials.",
+                    retail: "Focus on e-commerce integration and social media advertising. Retail businesses need mobile optimization and inventory showcase capabilities."
+                },
+                merchant_cash_advance: {
+                    restaurant: "Focus on seasonal cash flow needs and equipment financing. Restaurants often need funding for renovations and expansion.",
+                    dentist: "Emphasize equipment leasing and technology upgrades. Dental practices frequently invest in new technology and facility improvements.",
+                    construction: "Highlight project financing and equipment purchases. Construction companies need funding for materials and payroll during projects.",
+                    retail: "Focus on inventory financing and expansion funding. Retail businesses need capital for seasonal inventory and new location openings."
+                }
+            };
+            
+            return strategies[service]?.[industry] || "Research the specific needs and pain points of this industry in your target state. Customize your approach based on local market conditions and business challenges.";
+        }
+
+        function getSuccessFactors(service, industry) {
+            const factors = {
+                digital_marketing: [
+                    "Strong portfolio of similar industry clients",
+                    "Clear ROI demonstration",
+                    "Ongoing performance reporting",
+                    "Local market expertise",
+                    "Proven track record with measurable results"
+                ],
+                merchant_cash_advance: [
+                    "Fast funding turnaround time",
+                    "Flexible repayment terms",
+                    "Transparent fee structure",
+                    "Industry-specific underwriting",
+                    "Strong customer service and support"
+                ]
+            };
+            
+            return factors[service] || [
+                "Industry-specific expertise",
+                "Proven track record",
+                "Customized solutions",
+                "Excellent customer service",
+                "Clear value proposition"
+            ];
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function() {
+            generateLeadPools();
+            console.log('🚀 WebSwan Dual Lead Intelligence initialized with Firebase!');
+        });
+    </script>
+</body>
+</html>
